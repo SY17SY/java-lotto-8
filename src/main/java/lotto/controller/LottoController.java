@@ -79,6 +79,8 @@ public class LottoController {
                 resultDto = lottoService.calculate(lottosDto, winNumbers, bonusNumber);
                 promptView.printPromptResult();
                 outputView.printResult(resultDto);
+                double profitRate = lottoService.getProfitRate(lottosDto, resultDto);
+                outputView.printProfitRate(profitRate);
             } catch (IllegalArgumentException e) {
                 errorView.printError(e);
             }
