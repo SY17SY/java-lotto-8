@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.util.List;
 import java.util.Map;
 import lotto.dto.LottosDto;
+import lotto.dto.WinAndBonusDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -15,8 +16,8 @@ class ResultTest {
     void 당첨_번호에_1_45_범위_외의_숫자가_있으면_예외가_발생한다() {
         LottosDto lottosDto = new Lottos(1, List.of(Lotto.of(List.of(1, 2, 3, 4, 5, 6)))).toDto();
         List<Integer> winNumbers = List.of(1, 2, 3, 4, 5, 46);
-        int bonusNumbers = 6;
-        assertThatThrownBy(() -> Result.from(lottosDto, winNumbers, bonusNumbers))
+        int bonusNumber = 6;
+        assertThatThrownBy(() -> Result.from(lottosDto, WinAndBonus.of(winNumbers, bonusNumber).toDto()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.WIN_BONUS_RANGE.getMessage());
     }
@@ -26,8 +27,8 @@ class ResultTest {
     void 보너스_번호가_1_45_범위_외이면_예외가_발생한다() {
         LottosDto lottosDto = new Lottos(1, List.of(Lotto.of(List.of(1, 2, 3, 4, 5, 6)))).toDto();
         List<Integer> winNumbers = List.of(1, 2, 3, 4, 5, 6);
-        int bonusNumbers = 46;
-        assertThatThrownBy(() -> Result.from(lottosDto, winNumbers, bonusNumbers))
+        int bonusNumber = 46;
+        assertThatThrownBy(() -> Result.from(lottosDto, WinAndBonus.of(winNumbers, bonusNumber).toDto()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.WIN_BONUS_RANGE.getMessage());
     }
@@ -37,8 +38,8 @@ class ResultTest {
     void 당첨_번호가_6개보다_적으면_예외가_발생한다() {
         LottosDto lottosDto = new Lottos(1, List.of(Lotto.of(List.of(1, 2, 3, 4, 5, 6)))).toDto();
         List<Integer> winNumbers = List.of(1, 2, 3, 4, 5);
-        int bonusNumbers = 45;
-        assertThatThrownBy(() -> Result.from(lottosDto, winNumbers, bonusNumbers))
+        int bonusNumber = 45;
+        assertThatThrownBy(() -> Result.from(lottosDto, WinAndBonus.of(winNumbers, bonusNumber).toDto()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.WIN_NUMBER_LENGTH.getMessage());
     }
@@ -48,8 +49,8 @@ class ResultTest {
     void 당첨_번호가_6개보다_많으면_예외가_발생한다() {
         LottosDto lottosDto = new Lottos(1, List.of(Lotto.of(List.of(1, 2, 3, 4, 5, 6)))).toDto();
         List<Integer> winNumbers = List.of(1, 2, 3, 4, 5, 6, 7);
-        int bonusNumbers = 45;
-        assertThatThrownBy(() -> Result.from(lottosDto, winNumbers, bonusNumbers))
+        int bonusNumber = 45;
+        assertThatThrownBy(() -> Result.from(lottosDto, WinAndBonus.of(winNumbers, bonusNumber).toDto()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.WIN_NUMBER_LENGTH.getMessage());
     }
@@ -59,8 +60,8 @@ class ResultTest {
     void 당첨_번호_중_중복_숫자가_있으면_예외가_발생한다() {
         LottosDto lottosDto = new Lottos(1, List.of(Lotto.of(List.of(1, 2, 3, 4, 5, 6)))).toDto();
         List<Integer> winNumbers = List.of(1, 2, 3, 4, 5, 5);
-        int bonusNumbers = 45;
-        assertThatThrownBy(() -> Result.from(lottosDto, winNumbers, bonusNumbers))
+        int bonusNumber = 45;
+        assertThatThrownBy(() -> Result.from(lottosDto, WinAndBonus.of(winNumbers, bonusNumber).toDto()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.WIN_NUMBER_DUPLICATION.getMessage());
     }
@@ -70,8 +71,8 @@ class ResultTest {
     void 당첨_번호와_보너스_번호가_중복이면_예외가_발생한다() {
         LottosDto lottosDto = new Lottos(1, List.of(Lotto.of(List.of(1, 2, 3, 4, 5, 6)))).toDto();
         List<Integer> winNumbers = List.of(1, 2, 3, 4, 5, 6);
-        int bonusNumbers = 6;
-        assertThatThrownBy(() -> Result.from(lottosDto, winNumbers, bonusNumbers))
+        int bonusNumber = 6;
+        assertThatThrownBy(() -> Result.from(lottosDto, WinAndBonus.of(winNumbers, bonusNumber).toDto()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.WIN_BONUS_DUPLICATION.getMessage());
     }
@@ -87,7 +88,7 @@ class ResultTest {
         List<Integer> winNumbers = List.of(1, 2, 3, 4, 5, 6);
         int bonusNumber = 7;
 
-        Result result = Result.from(lottosDto, winNumbers, bonusNumber);
+        Result result = Result.from(lottosDto, WinAndBonus.of(winNumbers, bonusNumber).toDto());
         Map<Rank, Integer> rankCounts = result.toDto().rankCounts();
 
         assertThat(rankCounts.get(Rank.FIRST)).isEqualTo(1);

@@ -4,10 +4,13 @@ import java.util.List;
 import lotto.domain.LottoFactory;
 import lotto.domain.Lottos;
 import lotto.domain.Result;
+import lotto.domain.WinAndBonus;
 import lotto.dto.LottosDto;
 import lotto.dto.ResultDto;
+import lotto.dto.WinAndBonusDto;
 import lotto.service.mapper.LottosMapper;
 import lotto.service.mapper.ResultMapper;
+import lotto.service.mapper.WinAndBonusMapper;
 
 public class LottoService {
     private static final int PRICE = 1000;
@@ -18,7 +21,9 @@ public class LottoService {
     }
 
     public ResultDto calculate(LottosDto lottosDto, List<Integer> winNumbers, int bonusNumber) {
-        Result result = Result.from(lottosDto, winNumbers, bonusNumber);
+        WinAndBonus winAndBonus = WinAndBonus.of(winNumbers, bonusNumber);
+        WinAndBonusDto winAndBonusDto = WinAndBonusMapper.toDto(winAndBonus);
+        Result result = Result.from(lottosDto, winAndBonusDto);
         return ResultMapper.toDto(result);
     }
 
