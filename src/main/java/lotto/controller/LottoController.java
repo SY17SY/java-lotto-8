@@ -3,6 +3,7 @@ package lotto.controller;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import lotto.domain.LottoAutoFactory;
 import lotto.dto.LottosDto;
 import lotto.dto.ResultDto;
@@ -31,8 +32,7 @@ public class LottoController {
         LottosDto lottosDto = null;
         while (true) {
             try {
-                promptView.printPromptPayment();
-                int payment = askUntilValid(Parser::parsePayment);
+                int payment = askUntilValid(promptView::printPromptPayment, Parser::parsePayment);
                 lottosDto = lottoService.generate(payment, new LottoAutoFactory());
                 break;
             } catch (IllegalArgumentException e) {
@@ -43,30 +43,12 @@ public class LottoController {
 
         List<Integer> winNumbers = List.of();
         int bonusNumber = 0;
-
-        while (true) {
-            try {
-                promptView.printPromptWinNumber();
-                winNumbers = askUntilValid(Parser::parseWinNumber);
-                break;
-            } catch (IllegalArgumentException e) {
-                errorView.printError(e);
-            }
-        }
-
-        while (true) {
-            try {
-                promptView.printPromptBonusNumber();
-                bonusNumber = askUntilValid(Parser::parseBonusNumber);
-                break;
-            } catch (IllegalArgumentException e) {
-                errorView.printError(e);
-            }
-        }
-
         ResultDto resultDto = null;
-        while(true) {
+
+        while (true) {
             try {
+                winNumbers = askUntilValid(promptView::printPromptWinNumber, Parser::parseWinNumber);
+                bonusNumber = askUntilValid(promptView::printPromptBonusNumber, Parser::parseBonusNumber);
                 resultDto = lottoService.calculate(lottosDto, winNumbers, bonusNumber);
                 break;
             } catch (IllegalArgumentException e) {
@@ -75,13 +57,15 @@ public class LottoController {
         }
         promptView.printPromptResult();
         outputView.printResult(resultDto);
+
         double profitRate = lottoService.getProfitRate(lottosDto, resultDto);
         outputView.printProfitRate(profitRate);
     }
 
-    private <T> T askUntilValid(Function<String, T> parse) {
+    private <T> T askUntilValid(Runnable prompt, Function<String, T> parse) {
         while (true) {
             try {
+                prompt.run();
                 String input = inputView.inputLine();
                 return parse.apply(input);
             } catch (IllegalArgumentException e) {
