@@ -6,6 +6,7 @@ public enum ErrorMessage {
     PAYMENT_NEGATIVE("구입 금액은 0보다 커야 합니다."),
     PAYMENT_REMAINDER("구입 금액은 1,000원 단위이어야 합니다."),
     LOTTO_NUMBERS_LENGTH("로또 번호는 6개여야 합니다."),
+    LOTTO_NUMBERS_RANGE("로또 번호는 1부터 45 사이의 숫자여야 합니다."),
     LOTTO_NUMBERS_DUPLICATION("로또 번호는 서로 다른 수이어야 합니다."),
     WIN_NUMBER_BLANK("당첨 번호를 작성해 주십시오."),
     WIN_NUMBER_DELIMITER("당첨 번호가 쉼표(,)로 구분되지 않았습니다."),
