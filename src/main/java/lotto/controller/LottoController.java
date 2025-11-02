@@ -1,8 +1,10 @@
 package lotto.controller;
 
+import java.util.List;
 import lotto.domain.LottoAutoFactory;
 import lotto.dto.LottosDto;
 import lotto.service.LottoService;
+import lotto.view.ErrorMessage;
 import lotto.view.ErrorView;
 import lotto.view.InputView;
 import lotto.view.PromptView;
@@ -21,17 +23,28 @@ public class LottoController {
     }
 
     public void run() {
-        Parser parser = new Parser(errorView);
+        Parser parser = new Parser();
 
         boolean success = false;
 
         while (!success) {
             try {
                 promptView.printPromptPayment();
-                String inputPayment = inputView.inputPayment();
+                String inputPayment = inputView.inputLine();
                 int payment = parser.parsePayment(inputPayment);
                 LottosDto lottosDto = lottoService.generate(payment, new LottoAutoFactory());
                 success = true;
+            } catch (IllegalArgumentException e) {
+                errorView.printError(e);
+            }
+        }
+
+        success = false;
+
+        while (!success) {
+            try {
+                promptView.printPromptWinNumber();
+                String inputWinNumber = inputView.inputLine();
             } catch (IllegalArgumentException e) {
                 errorView.printError(e);
             }
@@ -40,13 +53,15 @@ public class LottoController {
 }
 
 class Parser {
-    private final ErrorView errorView;
-
-    Parser(ErrorView errorView) {
-        this.errorView = errorView;
+    int parsePayment(String inputPayment) {
+        try {
+            return Integer.parseInt(inputPayment);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(ErrorMessage.PAYMENT_SYNTAX.getMessage());
+        }
     }
 
-    int parsePayment(String inputPayment) {
-        return Integer.parseInt(inputPayment);
+    List<String> parseWinNumber(String inputWinNumber) {
+
     }
 }
