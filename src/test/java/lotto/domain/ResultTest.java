@@ -70,7 +70,7 @@ class ResultTest {
     @Test
     void 당첨_번호와_보너스_번호가_중복이면_예외가_발생한다() {
         LottosDto lottosDto = new Lottos(1, List.of(new Lotto(List.of(1, 2, 3, 4, 5, 6)))).toDto();
-        List<Integer> winNumbers = List.of(1, 2, 3, 4, 5, 46);
+        List<Integer> winNumbers = List.of(1, 2, 3, 4, 5, 6);
         int bonusNumbers = 6;
         assertThatThrownBy(() -> Result.from(lottosDto, winNumbers, bonusNumbers))
                 .isInstanceOf(IllegalArgumentException.class)
