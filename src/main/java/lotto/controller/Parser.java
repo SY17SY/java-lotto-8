@@ -6,7 +6,7 @@ import java.util.List;
 public class Parser {
     private static final String DELIMITER = ",";
 
-    static int parsePayment(String inputPayment) {
+    public static int parsePayment(String inputPayment) {
         try {
             if (inputPayment == null || inputPayment.isBlank()) {
                 throw new IllegalArgumentException(SyntaxErrorMessage.PAYMENT_BLANK.getMessage());
@@ -17,7 +17,7 @@ public class Parser {
         }
     }
 
-    static List<Integer> parseWinNumber(String inputWinNumber) {
+    public static List<Integer> parseWinNumber(String inputWinNumber) {
         try {
             List<String> inputWins = splitWinNumber(inputWinNumber);
             return inputWins.stream()
@@ -30,7 +30,7 @@ public class Parser {
         }
     }
 
-    static private List<String> splitWinNumber(String inputWinNumber) {
+    private static List<String> splitWinNumber(String inputWinNumber) {
         if (inputWinNumber == null || inputWinNumber.isBlank()) {
             throw new IllegalArgumentException(SyntaxErrorMessage.WIN_NUMBER_BLANK.getMessage());
         }
@@ -43,7 +43,7 @@ public class Parser {
                 .toList();
     }
 
-    static int parseBonusNumber(String inputBonusNumber) {
+    public static int parseBonusNumber(String inputBonusNumber) {
         try {
             if (inputBonusNumber == null || inputBonusNumber.isBlank()) {
                 throw new IllegalArgumentException(SyntaxErrorMessage.BONUS_NUMBER_BLANK.getMessage());

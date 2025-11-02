@@ -1,9 +1,7 @@
 package lotto.controller;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import lotto.domain.LottoAutoFactory;
 import lotto.dto.LottosDto;
 import lotto.dto.ResultDto;
@@ -29,7 +27,7 @@ public class LottoController {
     }
 
     public void run() {
-        LottosDto lottosDto = null;
+        LottosDto lottosDto;
         while (true) {
             try {
                 int payment = askUntilValid(promptView::printPromptPayment, Parser::parsePayment);
@@ -41,9 +39,9 @@ public class LottoController {
         }
         outputView.printLottos(lottosDto);
 
-        List<Integer> winNumbers = List.of();
-        int bonusNumber = 0;
-        ResultDto resultDto = null;
+        List<Integer> winNumbers;
+        int bonusNumber;
+        ResultDto resultDto;
 
         while (true) {
             try {
