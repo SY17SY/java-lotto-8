@@ -12,7 +12,7 @@ class LottoTest {
     @DisplayName("실패: 로또 번호가 비어 있을 때 예외 발생")
     @Test
     void 로또_번호가_비어_있으면_예외가_발생한다() {
-        assertThatThrownBy(() -> new Lotto(List.of()))
+        assertThatThrownBy(() -> Lotto.of(List.of()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.LOTTO_NUMBERS_BLANK.getMessage());
     }
@@ -20,7 +20,7 @@ class LottoTest {
     @DisplayName("실패: 로또 번호의 개수가 6개가 넘어가면 예외 발생")
     @Test
     void 로또_번호의_개수가_6개가_넘어가면_예외가_발생한다() {
-        assertThatThrownBy(() -> new Lotto(List.of(1, 2, 3, 4, 5, 6, 7)))
+        assertThatThrownBy(() -> Lotto.of(List.of(1, 2, 3, 4, 5, 6, 7)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.LOTTO_NUMBERS_LENGTH.getMessage());
     }
@@ -28,7 +28,7 @@ class LottoTest {
     @DisplayName("실패: 로또 번호에 1~45 범위를 이탈하는 숫자가 있으면 예외 발생")
     @Test
     void 로또_번호에_1_45_범위_외의_숫자가_있으면_예외가_발생한다() {
-        assertThatThrownBy(() -> new Lotto(List.of(1, 2, 3, 4, 5, 46)))
+        assertThatThrownBy(() -> Lotto.of(List.of(1, 2, 3, 4, 5, 46)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.LOTTO_NUMBERS_RANGE.getMessage());
     }
@@ -36,7 +36,7 @@ class LottoTest {
     @DisplayName("실패: 로또 번호에 중복된 숫자가 있으면 예외 발생")
     @Test
     void 로또_번호에_중복된_숫자가_있으면_예외가_발생한다() {
-        assertThatThrownBy(() -> new Lotto(List.of(1, 2, 3, 4, 5, 5)))
+        assertThatThrownBy(() -> Lotto.of(List.of(1, 2, 3, 4, 5, 5)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.LOTTO_NUMBERS_DUPLICATION.getMessage());
     }
@@ -45,7 +45,7 @@ class LottoTest {
     @Test
     void 로또_생성() {
         List<Integer> numbers = List.of(1, 2, 3, 4, 5, 6);
-        Lotto lotto = new Lotto(numbers);
+        Lotto lotto = Lotto.of(numbers);
         assertThat(lotto.toDto().numbers())
                 .hasSize(6)
                 .containsExactly(1, 2, 3, 4, 5, 6);
@@ -55,7 +55,7 @@ class LottoTest {
     @Test
     void 로또_번호_오름차순() {
         List<Integer> numbers = List.of(1, 2, 3, 6, 5, 4);
-        Lotto lotto = new Lotto(numbers);
+        Lotto lotto = Lotto.of(numbers);
         assertThat(lotto.toDto().numbers())
                 .hasSize(6)
                 .containsExactly(1, 2, 3, 4, 5, 6);

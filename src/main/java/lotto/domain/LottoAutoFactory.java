@@ -7,6 +7,6 @@ public class LottoAutoFactory implements LottoFactory {
     @Override
     public Lotto generate() {
         List<Integer> numbers = Randoms.pickUniqueNumbersInRange(1, 45, 6);
-        return new Lotto(numbers);
+        return Lotto.of(numbers);
     }
 }
