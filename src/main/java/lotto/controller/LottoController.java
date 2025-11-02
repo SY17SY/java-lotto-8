@@ -77,6 +77,8 @@ public class LottoController {
         while(!next) {
             try {
                 resultDto = lottoService.calculate(lottosDto, winNumbers, bonusNumber);
+                promptView.printPromptResult();
+                outputView.printResult(resultDto);
             } catch (IllegalArgumentException e) {
                 errorView.printError(e);
             }
