@@ -10,6 +10,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class LottoTest {
+    @DisplayName("실패: 로또 번호가 비어 있을 때 예외 발생")
+    @Test
+    void 로또_번호가_비어_있으면_예외가_발생한다() {
+        assertThatThrownBy(() -> new Lotto(List.of()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(ErrorMessage.LOTTO_NUMBERS_BLANK.getMessage());
+    }
+
     @DisplayName("실패: 로또 번호의 개수가 6개가 넘어가면 예외 발생")
     @Test
     void 로또_번호의_개수가_6개가_넘어가면_예외가_발생한다() {
