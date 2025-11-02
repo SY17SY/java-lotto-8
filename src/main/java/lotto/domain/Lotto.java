@@ -17,6 +17,9 @@ public class Lotto {
     }
 
     private void validate(List<Integer> numbers) {
+        if (numbers.isEmpty()) {
+            throw new IllegalArgumentException(ErrorMessage.LOTTO_NUMBERS_BLANK.getMessage());
+        }
         if (numbers.size() != 6) {
             throw new IllegalArgumentException(ErrorMessage.LOTTO_NUMBERS_LENGTH.getMessage());
         }
