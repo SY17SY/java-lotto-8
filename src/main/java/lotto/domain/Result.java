@@ -16,9 +16,11 @@ public class Result {
     private static final int NUMBER_END = 45;
 
     private final Map<Rank, Integer> rankCounts;
+    private final int profit;
 
     Result(Map<Rank, Integer> rankCounts) {
         this.rankCounts = rankCounts;
+        this.profit = getProfit();
     }
 
     public static Result from(LottosDto lottosDto, List<Integer> winNumbers, int bonusNumber) {
@@ -77,7 +79,16 @@ public class Result {
         return count;
     }
 
+    private int getProfit() {
+        int profit = 0;
+        for (Rank rank : this.rankCounts.keySet()) {
+            int count = this.rankCounts.get(rank);
+            profit += count * rank.getPrizeMoney();
+        }
+        return profit;
+    }
+
     public ResultDto toDto() {
-        return new ResultDto(rankCounts);
+        return new ResultDto(rankCounts, profit);
     }
 }
