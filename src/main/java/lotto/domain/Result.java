@@ -8,6 +8,7 @@ import java.util.Set;
 import lotto.dto.LottoDto;
 import lotto.dto.LottosDto;
 import lotto.dto.ResultDto;
+import lotto.view.ErrorMessage;
 
 public class Result {
     private static final int NUMBER_LENGTH = 6;
@@ -21,6 +22,8 @@ public class Result {
     }
 
     public static Result from(LottosDto lottosDto, List<Integer> winNumbers, int bonusNumber) {
+        validateWinBonusNumbers(winNumbers, bonusNumber);
+
         Map<Rank, Integer> rankCounts = new EnumMap<>(Rank.class);
         Set<Integer> winSet = new HashSet<>(winNumbers);
 
@@ -37,6 +40,31 @@ public class Result {
             }
         }
         return new Result(rankCounts);
+    }
+
+    private static void validateWinBonusNumbers(List<Integer> winNumbers, int bonusNumber) {
+        validateWinNumbers(winNumbers);
+        winNumbers.forEach(Result::validateNumber);
+        validateNumber(bonusNumber);
+
+        if (winNumbers.contains(bonusNumber)) {
+            throw new IllegalArgumentException(ErrorMessage.WIN_BONUS_DUPLICATION.getMessage());
+        }
+    }
+
+    private static void validateWinNumbers(List<Integer> winNumbers) {
+        if (winNumbers.size() != NUMBER_LENGTH) {
+            throw new IllegalArgumentException(ErrorMessage.WIN_NUMBER_LENGTH.getMessage());
+        }
+        if (winNumbers.stream().distinct().count() != winNumbers.size()) {
+            throw new IllegalArgumentException(ErrorMessage.WIN_NUMBER_DUPLICATION.getMessage());
+        }
+    }
+
+    private static void validateNumber(int number) {
+        if (number < NUMBER_START || number > NUMBER_END) {
+            throw new IllegalArgumentException(ErrorMessage.WIN_BONUS_RANGE.getMessage());
+        }
     }
 
     private static int countMatches(List<Integer> numbers, Set<Integer> winSet) {
