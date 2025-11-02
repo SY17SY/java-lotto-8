@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lotto.dto.LottoDto;
 import lotto.dto.LottosDto;
+import lotto.view.ErrorMessage;
 
 public class Lottos {
     private final int count;
@@ -17,11 +18,11 @@ public class Lottos {
     public static Lottos from(int payment, LottoFactory factory) {
         validate(payment);
         int count = payment / 1000;
-        List<Lotto> lottos = new ArrayList<>();
+        List<Lotto> newLottos = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            lottos.add(factory.generate());
+            newLottos.add(factory.generate());
         }
-        return new Lottos(count, lottos);
+        return new Lottos(count, newLottos);
     }
 
     public LottosDto toDto() {
@@ -33,10 +34,10 @@ public class Lottos {
 
     private static void validate(int payment) {
         if (payment < 0) {
-
+            throw new IllegalArgumentException(ErrorMessage.PAYMENT_NEGATIVE.getMessage());
         }
         if (payment % 1000 != 0) {
-
+            throw new IllegalArgumentException(ErrorMessage.PAYMENT_REMAINDER.getMessage());
         }
     }
 }
