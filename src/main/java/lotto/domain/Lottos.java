@@ -7,6 +7,8 @@ import lotto.dto.LottosDto;
 import lotto.view.ErrorMessage;
 
 public class Lottos {
+    private static final int PRICE = 1000;
+
     private final int count;
     private final List<Lotto> lottos;
 
@@ -17,7 +19,7 @@ public class Lottos {
 
     public static Lottos from(int payment, LottoFactory factory) {
         validate(payment);
-        int count = payment / 1000;
+        int count = payment / PRICE;
         List<Lotto> newLottos = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             newLottos.add(factory.generate());
@@ -36,7 +38,7 @@ public class Lottos {
         if (payment < 0) {
             throw new IllegalArgumentException(ErrorMessage.PAYMENT_NEGATIVE.getMessage());
         }
-        if (payment % 1000 != 0) {
+        if (payment % PRICE != 0) {
             throw new IllegalArgumentException(ErrorMessage.PAYMENT_REMAINDER.getMessage());
         }
     }
