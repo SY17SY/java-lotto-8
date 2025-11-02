@@ -39,14 +39,11 @@ public class LottoController {
         }
         outputView.printLottos(lottosDto);
 
-        List<Integer> winNumbers;
-        int bonusNumber;
         ResultDto resultDto;
-
         while (true) {
             try {
-                winNumbers = askUntilValid(promptView::printPromptWinNumber, Parser::parseWinNumber);
-                bonusNumber = askUntilValid(promptView::printPromptBonusNumber, Parser::parseBonusNumber);
+                List<Integer> winNumbers = askUntilValid(promptView::printPromptWinNumber, Parser::parseWinNumber);
+                int bonusNumber = askUntilValid(promptView::printPromptBonusNumber, Parser::parseBonusNumber);
                 resultDto = lottoService.calculate(lottosDto, winNumbers, bonusNumber);
                 break;
             } catch (IllegalArgumentException e) {
