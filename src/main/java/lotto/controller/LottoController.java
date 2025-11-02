@@ -1,5 +1,6 @@
 package lotto.controller;
 
+import java.util.Arrays;
 import java.util.List;
 import lotto.domain.LottoAutoFactory;
 import lotto.dto.LottosDto;
@@ -7,17 +8,20 @@ import lotto.service.LottoService;
 import lotto.view.ErrorMessage;
 import lotto.view.ErrorView;
 import lotto.view.InputView;
+import lotto.view.OutputView;
 import lotto.view.PromptView;
 
 public class LottoController {
     private final PromptView promptView;
     private final InputView inputView;
+    private final OutputView outputView;
     private final ErrorView errorView;
     private final LottoService lottoService;
 
-    public LottoController(PromptView promptView, InputView inputView, ErrorView errorView, LottoService lottoService) {
+    public LottoController(PromptView promptView, InputView inputView, OutputView outputView, ErrorView errorView, LottoService lottoService) {
         this.promptView = promptView;
         this.inputView = inputView;
+        this.outputView = outputView;
         this.errorView = errorView;
         this.lottoService = lottoService;
     }
@@ -25,26 +29,29 @@ public class LottoController {
     public void run() {
         Parser parser = new Parser();
 
-        boolean success = false;
+        boolean next = false;
 
-        while (!success) {
+        while (!next) {
             try {
                 promptView.printPromptPayment();
                 String inputPayment = inputView.inputLine();
                 int payment = parser.parsePayment(inputPayment);
                 LottosDto lottosDto = lottoService.generate(payment, new LottoAutoFactory());
-                success = true;
+                outputView.printLottos(lottosDto);
+                next = true;
             } catch (IllegalArgumentException e) {
                 errorView.printError(e);
             }
         }
 
-        success = false;
+        next = false;
 
-        while (!success) {
+        while (!next) {
             try {
                 promptView.printPromptWinNumber();
                 String inputWinNumber = inputView.inputLine();
+                List<Integer> winNumbers = parser.parseWinNumber(inputWinNumber);
+                next = true;
             } catch (IllegalArgumentException e) {
                 errorView.printError(e);
             }
@@ -53,6 +60,8 @@ public class LottoController {
 }
 
 class Parser {
+    private static final String DELIMITER = ",";
+
     int parsePayment(String inputPayment) {
         try {
             return Integer.parseInt(inputPayment);
@@ -61,7 +70,29 @@ class Parser {
         }
     }
 
-    List<String> parseWinNumber(String inputWinNumber) {
+    List<Integer> parseWinNumber(String inputWinNumber) {
+        try {
+            List<String> inputWins = splitWinNumber(inputWinNumber);
+            return inputWins.stream()
+                    .map(Integer::parseInt)
+                    .toList();
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(ErrorMessage.WIN_NUMBER_SYNTAX.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        }
+    }
 
+    private List<String> splitWinNumber(String inputWinNumber) {
+        if (inputWinNumber == null || inputWinNumber.isBlank()) {
+            throw new IllegalArgumentException(ErrorMessage.WIN_NUMBER_BLANK.getMessage());
+        }
+        if (!inputWinNumber.contains(DELIMITER)) {
+            throw new IllegalArgumentException(ErrorMessage.WIN_NUMBER_DELIMITER.getMessage());
+        }
+        return Arrays.stream(inputWinNumber.split(DELIMITER))
+                .map(String::trim)
+                .filter(s -> !s.isBlank())
+                .toList();
     }
 }
