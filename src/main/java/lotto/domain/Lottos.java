@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import lotto.dto.LottoDto;
 import lotto.dto.LottosDto;
-import lotto.view.ErrorMessage;
 
 public class Lottos {
     private static final int PRICE = 1000;

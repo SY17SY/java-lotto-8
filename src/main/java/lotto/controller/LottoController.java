@@ -6,7 +6,6 @@ import lotto.domain.LottoAutoFactory;
 import lotto.dto.LottosDto;
 import lotto.dto.ResultDto;
 import lotto.service.LottoService;
-import lotto.view.ErrorMessage;
 import lotto.view.ErrorView;
 import lotto.view.InputView;
 import lotto.view.OutputView;
@@ -98,11 +97,11 @@ class Parser {
     int parsePayment(String inputPayment) {
         try {
             if (inputPayment == null || inputPayment.isBlank()) {
-                throw new IllegalArgumentException(ErrorMessage.PAYMENT_BLANK.getMessage());
+                throw new IllegalArgumentException(SyntaxErrorMessage.PAYMENT_BLANK.getMessage());
             }
             return Integer.parseInt(inputPayment);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(ErrorMessage.PAYMENT_SYNTAX.getMessage());
+            throw new IllegalArgumentException(SyntaxErrorMessage.PAYMENT_SYNTAX.getMessage());
         }
     }
 
@@ -113,7 +112,7 @@ class Parser {
                     .map(Integer::parseInt)
                     .toList();
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(ErrorMessage.WIN_NUMBER_SYNTAX.getMessage());
+            throw new IllegalArgumentException(SyntaxErrorMessage.WIN_NUMBER_SYNTAX.getMessage());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         }
@@ -121,10 +120,10 @@ class Parser {
 
     private List<String> splitWinNumber(String inputWinNumber) {
         if (inputWinNumber == null || inputWinNumber.isBlank()) {
-            throw new IllegalArgumentException(ErrorMessage.WIN_NUMBER_BLANK.getMessage());
+            throw new IllegalArgumentException(SyntaxErrorMessage.WIN_NUMBER_BLANK.getMessage());
         }
         if (!inputWinNumber.contains(DELIMITER)) {
-            throw new IllegalArgumentException(ErrorMessage.WIN_NUMBER_DELIMITER.getMessage());
+            throw new IllegalArgumentException(SyntaxErrorMessage.WIN_NUMBER_DELIMITER.getMessage());
         }
         return Arrays.stream(inputWinNumber.split(DELIMITER))
                 .map(String::trim)
@@ -135,11 +134,11 @@ class Parser {
     int parseBonusNumber(String inputBonusNumber) {
         try {
             if (inputBonusNumber == null || inputBonusNumber.isBlank()) {
-                throw new IllegalArgumentException(ErrorMessage.BONUS_NUMBER_BLANK.getMessage());
+                throw new IllegalArgumentException(SyntaxErrorMessage.BONUS_NUMBER_BLANK.getMessage());
             }
             return Integer.parseInt(inputBonusNumber);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(ErrorMessage.BONUS_NUMBER_SYNTAX.getMessage());
+            throw new IllegalArgumentException(SyntaxErrorMessage.BONUS_NUMBER_SYNTAX.getMessage());
         }
     }
 }

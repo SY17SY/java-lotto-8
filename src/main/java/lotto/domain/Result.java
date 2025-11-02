@@ -8,7 +8,6 @@ import java.util.Set;
 import lotto.dto.LottoDto;
 import lotto.dto.LottosDto;
 import lotto.dto.ResultDto;
-import lotto.view.ErrorMessage;
 
 public class Result {
     private static final int NUMBER_LENGTH = 6;

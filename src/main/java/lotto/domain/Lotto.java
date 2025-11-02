@@ -2,7 +2,6 @@ package lotto.domain;
 
 import java.util.List;
 import lotto.dto.LottoDto;
-import lotto.view.ErrorMessage;
 
 public class Lotto {
     private static final int NUMBER_LENGTH = 6;
