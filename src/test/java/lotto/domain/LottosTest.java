@@ -1,5 +1,7 @@
 package lotto.domain;
 
+import static camp.nextstep.edu.missionutils.test.Assertions.assertRandomUniqueNumbersInRangeTest;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import lotto.view.ErrorMessage;
@@ -23,5 +25,13 @@ class LottosTest {
         assertThatThrownBy(() -> Lottos.from(payment, new LottoAutoFactory()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.PAYMENT_REMAINDER.getMessage());
+    }
+
+    @DisplayName("성공: 지불 금액만큼의 로또 생성")
+    @Test
+    void 지불_금액만큼의_로또_생성() {
+        int payment = 3000;
+        Lottos lottos = Lottos.from(payment, new LottoAutoFactory());
+        assertThat(lottos.toDto().count()).isEqualTo(3);
     }
 }
