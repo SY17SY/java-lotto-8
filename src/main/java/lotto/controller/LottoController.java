@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import lotto.domain.LottoAutoFactory;
 import lotto.dto.LottosDto;
+import lotto.dto.ResultDto;
 import lotto.service.LottoService;
 import lotto.view.ErrorMessage;
 import lotto.view.ErrorView;
@@ -31,12 +32,13 @@ public class LottoController {
 
         boolean next = false;
 
+        LottosDto lottosDto = null;
         while (!next) {
             try {
                 promptView.printPromptPayment();
                 String inputPayment = inputView.inputLine();
                 int payment = parser.parsePayment(inputPayment);
-                LottosDto lottosDto = lottoService.generate(payment, new LottoAutoFactory());
+                lottosDto = lottoService.generate(payment, new LottoAutoFactory());
                 outputView.printLottos(lottosDto);
                 next = true;
             } catch (IllegalArgumentException e) {
@@ -46,11 +48,12 @@ public class LottoController {
 
         next = false;
 
+        List<Integer> winNumbers = List.of();
         while (!next) {
             try {
                 promptView.printPromptWinNumber();
                 String inputWinNumber = inputView.inputLine();
-                List<Integer> winNumbers = parser.parseWinNumber(inputWinNumber);
+                winNumbers = parser.parseWinNumber(inputWinNumber);
                 next = true;
             } catch (IllegalArgumentException e) {
                 errorView.printError(e);
@@ -59,11 +62,21 @@ public class LottoController {
 
         next = false;
 
+        int bonusNumber = 0;
         while (!next) {
             try {
                 promptView.printPromptBonusNumber();
                 String inputBonusNumber = inputView.inputLine();
-                int bonusNumber = parser.parseBonusNumber(inputBonusNumber);
+                bonusNumber = parser.parseBonusNumber(inputBonusNumber);
+            } catch (IllegalArgumentException e) {
+                errorView.printError(e);
+            }
+        }
+
+        ResultDto resultDto = null;
+        while(!next) {
+            try {
+                resultDto = lottoService.calculate(lottosDto, winNumbers, bonusNumber);
             } catch (IllegalArgumentException e) {
                 errorView.printError(e);
             }
