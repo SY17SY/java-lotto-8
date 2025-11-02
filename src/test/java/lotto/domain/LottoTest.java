@@ -18,6 +18,14 @@ class LottoTest {
                 .hasMessage(ErrorMessage.LOTTO_NUMBERS_LENGTH.getMessage());
     }
 
+    @DisplayName("실패: 로또 번호에 1~45 범위를 이탈하는 숫자가 있으면 예외 발생")
+    @Test
+    void 로또_번호에_1_45_범위_외의_숫자가_있으면_예외가_발생한다() {
+        assertThatThrownBy(() -> new Lotto(List.of(1, 2, 3, 4, 5, 46)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(ErrorMessage.LOTTO_NUMBERS_RANGE.getMessage());
+    }
+
     @DisplayName("실패: 로또 번호에 중복된 숫자가 있으면 예외 발생")
     @Test
     void 로또_번호에_중복된_숫자가_있으면_예외가_발생한다() {
