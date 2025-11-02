@@ -20,6 +20,9 @@ public class Lotto {
         if (numbers.size() != 6) {
             throw new IllegalArgumentException(ErrorMessage.LOTTO_NUMBERS_LENGTH.getMessage());
         }
+        if (numbers.stream().anyMatch(n -> n < 1 || n > 45)) {
+            throw new IllegalArgumentException(ErrorMessage.LOTTO_NUMBERS_RANGE.getMessage());
+        }
         if (numbers.stream().distinct().count() != numbers.size()) {
             throw new IllegalArgumentException(ErrorMessage.LOTTO_NUMBERS_DUPLICATION.getMessage());
         }
