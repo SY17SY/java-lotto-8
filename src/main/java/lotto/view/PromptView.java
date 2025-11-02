@@ -8,4 +8,8 @@ public class PromptView {
     public void printPromptWinNumber() {
         System.out.println(PromptMessage.WIN_NUMBER.getMessage());
     }
+
+    public void printPromptBonusNumber() {
+        System.out.println(PromptMessage.BONUS_NUMBER.getMessage());
+    }
 }
