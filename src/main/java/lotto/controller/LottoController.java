@@ -68,10 +68,13 @@ public class LottoController {
                 promptView.printPromptBonusNumber();
                 String inputBonusNumber = inputView.inputLine();
                 bonusNumber = parser.parseBonusNumber(inputBonusNumber);
+                next = true;
             } catch (IllegalArgumentException e) {
                 errorView.printError(e);
             }
         }
+
+        next = false;
 
         ResultDto resultDto = null;
         while(!next) {
@@ -81,6 +84,7 @@ public class LottoController {
                 outputView.printResult(resultDto);
                 double profitRate = lottoService.getProfitRate(lottosDto, resultDto);
                 outputView.printProfitRate(profitRate);
+                next = true;
             } catch (IllegalArgumentException e) {
                 errorView.printError(e);
             }

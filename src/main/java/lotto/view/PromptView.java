@@ -10,10 +10,12 @@ public class PromptView {
     }
 
     public void printPromptBonusNumber() {
+        System.out.println();
         System.out.println(PromptMessage.BONUS_NUMBER.getMessage());
     }
 
     public void printPromptResult() {
+        System.out.println();
         System.out.println(PromptMessage.RESULT.getMessage());
     }
 }
