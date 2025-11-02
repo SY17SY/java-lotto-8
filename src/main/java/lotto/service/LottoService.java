@@ -10,6 +10,8 @@ import lotto.service.mapper.LottosMapper;
 import lotto.service.mapper.ResultMapper;
 
 public class LottoService {
+    private static final int PRICE = 1000;
+
     public LottosDto generate(int payment, LottoFactory factory) {
         Lottos lottos = Lottos.from(payment, factory);
         return LottosMapper.toDto(lottos);
@@ -18,5 +20,10 @@ public class LottoService {
     public ResultDto calculate(LottosDto lottosDto, List<Integer> winNumbers, int bonusNumber) {
         Result result = Result.from(lottosDto, winNumbers, bonusNumber);
         return ResultMapper.toDto(result);
+    }
+
+    public double getProfitRate(LottosDto lottosDto, ResultDto resultDto) {
+        int totalPrice = lottosDto.count() * PRICE;
+        return resultDto.profit() * 100.0 / totalPrice;
     }
 }
