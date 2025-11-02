@@ -56,6 +56,18 @@ public class LottoController {
                 errorView.printError(e);
             }
         }
+
+        next = false;
+
+        while (!next) {
+            try {
+                promptView.printPromptBonusNumber();
+                String inputBonusNumber = inputView.inputLine();
+                int bonusNumber = parser.parseBonusNumber(inputBonusNumber);
+            } catch (IllegalArgumentException e) {
+                errorView.printError(e);
+            }
+        }
     }
 }
 
@@ -64,6 +76,9 @@ class Parser {
 
     int parsePayment(String inputPayment) {
         try {
+            if (inputPayment == null || inputPayment.isBlank()) {
+                throw new IllegalArgumentException(ErrorMessage.PAYMENT_BLANK.getMessage());
+            }
             return Integer.parseInt(inputPayment);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException(ErrorMessage.PAYMENT_SYNTAX.getMessage());
@@ -94,5 +109,16 @@ class Parser {
                 .map(String::trim)
                 .filter(s -> !s.isBlank())
                 .toList();
+    }
+
+    int parseBonusNumber(String inputBonusNumber) {
+        try {
+            if (inputBonusNumber == null || inputBonusNumber.isBlank()) {
+                throw new IllegalArgumentException(ErrorMessage.BONUS_NUMBER_BLANK.getMessage());
+            }
+            return Integer.parseInt(inputBonusNumber);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(ErrorMessage.BONUS_NUMBER_SYNTAX.getMessage());
+        }
     }
 }
