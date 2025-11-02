@@ -2,6 +2,7 @@ package lotto.controller;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 import lotto.domain.LottoAutoFactory;
 import lotto.dto.LottosDto;
 import lotto.dto.ResultDto;
@@ -27,63 +28,62 @@ public class LottoController {
     }
 
     public void run() {
-        Parser parser = new Parser();
-
-        boolean next = false;
-
         LottosDto lottosDto = null;
-        while (!next) {
+        while (true) {
             try {
                 promptView.printPromptPayment();
-                String inputPayment = inputView.inputLine();
-                int payment = parser.parsePayment(inputPayment);
+                int payment = askUntilValid(Parser::parsePayment);
                 lottosDto = lottoService.generate(payment, new LottoAutoFactory());
-                outputView.printLottos(lottosDto);
-                next = true;
+                break;
             } catch (IllegalArgumentException e) {
                 errorView.printError(e);
             }
         }
-
-        next = false;
+        outputView.printLottos(lottosDto);
 
         List<Integer> winNumbers = List.of();
-        while (!next) {
+        int bonusNumber = 0;
+
+        while (true) {
             try {
                 promptView.printPromptWinNumber();
-                String inputWinNumber = inputView.inputLine();
-                winNumbers = parser.parseWinNumber(inputWinNumber);
-                next = true;
+                winNumbers = askUntilValid(Parser::parseWinNumber);
+                break;
             } catch (IllegalArgumentException e) {
                 errorView.printError(e);
             }
         }
 
-        next = false;
-
-        int bonusNumber = 0;
-        while (!next) {
+        while (true) {
             try {
                 promptView.printPromptBonusNumber();
-                String inputBonusNumber = inputView.inputLine();
-                bonusNumber = parser.parseBonusNumber(inputBonusNumber);
-                next = true;
+                bonusNumber = askUntilValid(Parser::parseBonusNumber);
+                break;
             } catch (IllegalArgumentException e) {
                 errorView.printError(e);
             }
         }
 
-        next = false;
-
         ResultDto resultDto = null;
-        while(!next) {
+        while(true) {
             try {
                 resultDto = lottoService.calculate(lottosDto, winNumbers, bonusNumber);
-                promptView.printPromptResult();
-                outputView.printResult(resultDto);
-                double profitRate = lottoService.getProfitRate(lottosDto, resultDto);
-                outputView.printProfitRate(profitRate);
-                next = true;
+                break;
+            } catch (IllegalArgumentException e) {
+                errorView.printError(e);
+            }
+        }
+        promptView.printPromptResult();
+        outputView.printResult(resultDto);
+        double profitRate = lottoService.getProfitRate(lottosDto, resultDto);
+        outputView.printProfitRate(profitRate);
+    }
+
+    private <T> T askUntilValid(Function<String, T> parse) {
+        while (true) {
+            try {
+                String input = inputView.inputLine();
+                return parse.apply(input);
             } catch (IllegalArgumentException e) {
                 errorView.printError(e);
             }
@@ -94,7 +94,7 @@ public class LottoController {
 class Parser {
     private static final String DELIMITER = ",";
 
-    int parsePayment(String inputPayment) {
+    static int parsePayment(String inputPayment) {
         try {
             if (inputPayment == null || inputPayment.isBlank()) {
                 throw new IllegalArgumentException(SyntaxErrorMessage.PAYMENT_BLANK.getMessage());
@@ -105,7 +105,7 @@ class Parser {
         }
     }
 
-    List<Integer> parseWinNumber(String inputWinNumber) {
+    static List<Integer> parseWinNumber(String inputWinNumber) {
         try {
             List<String> inputWins = splitWinNumber(inputWinNumber);
             return inputWins.stream()
@@ -118,7 +118,7 @@ class Parser {
         }
     }
 
-    private List<String> splitWinNumber(String inputWinNumber) {
+    static private List<String> splitWinNumber(String inputWinNumber) {
         if (inputWinNumber == null || inputWinNumber.isBlank()) {
             throw new IllegalArgumentException(SyntaxErrorMessage.WIN_NUMBER_BLANK.getMessage());
         }
@@ -131,7 +131,7 @@ class Parser {
                 .toList();
     }
 
-    int parseBonusNumber(String inputBonusNumber) {
+    static int parseBonusNumber(String inputBonusNumber) {
         try {
             if (inputBonusNumber == null || inputBonusNumber.isBlank()) {
                 throw new IllegalArgumentException(SyntaxErrorMessage.BONUS_NUMBER_BLANK.getMessage());
