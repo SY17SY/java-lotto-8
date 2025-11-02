@@ -1,7 +1,9 @@
 package lotto.view;
 
+import lotto.domain.Rank;
 import lotto.dto.LottoDto;
 import lotto.dto.LottosDto;
+import lotto.dto.ResultDto;
 
 public class OutputView {
     public void printLottos(LottosDto lottosDto) {
@@ -10,5 +12,12 @@ public class OutputView {
             System.out.println(lottoDto.numbers());
         }
         System.out.println();
+    }
+
+    public void printResult(ResultDto resultDto) {
+        for (Rank rank : resultDto.rankCounts().keySet()) {
+            int count = resultDto.rankCounts().get(rank);
+            System.out.println(rank.getPrompt() + String.format("%d개", count));
+        }
     }
 }
