@@ -1,7 +1,6 @@
 package lotto.domain;
 
 import java.util.EnumMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -11,10 +10,6 @@ import lotto.dto.ResultDto;
 import lotto.dto.WinAndBonusDto;
 
 public class Result {
-    private static final int NUMBER_LENGTH = 6;
-    private static final int NUMBER_START = 1;
-    private static final int NUMBER_END = 45;
-
     private final Map<Rank, Integer> rankCounts;
     private final int profit;
 
@@ -34,9 +29,7 @@ public class Result {
             int matchCount = countMatches(lottoDto.numbers(), winAndBonusDto.winNumbers());
             boolean bonus = lottoDto.numbers().contains(winAndBonusDto.bonusNumber());
             Rank rank = Rank.fromMatches(matchCount, bonus);
-            if (rank != Rank.MISS) {
-                rankCounts.put(rank, rankCounts.get(rank) + 1);
-            }
+            rankCounts.put(rank, rankCounts.get(rank) + 1);
         }
         return new Result(rankCounts);
     }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lotto.dto.LottoDto;
 import lotto.dto.LottosDto;
+import lotto.service.mapper.LottoMapper;
 
 public class Lottos {
     private static final int PRICE = 1000;
@@ -28,7 +29,7 @@ public class Lottos {
 
     public LottosDto toDto() {
         List<LottoDto> lottoDtos = lottos.stream()
-                .map(Lotto::toDto)
+                .map(LottoMapper::toDto)
                 .toList();
         return new LottosDto(count, lottoDtos);
     }
