@@ -4,7 +4,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import lotto.dto.LottoDto;
 import lotto.dto.LottosDto;
 import lotto.dto.ResultDto;
 import lotto.dto.WinAndBonusDto;
@@ -19,38 +18,31 @@ public class Result {
     }
 
     public static Result from(LottosDto lottosDto, WinAndBonusDto winAndBonusDto) {
-        Map<Rank, Integer> rankCounts = new EnumMap<>(Rank.class);
+        EnumMap<Rank, Integer> rankCounts = new EnumMap<>(Rank.class);
 
         for (Rank rank : Rank.values()) {
             rankCounts.put(rank, 0);
         }
 
-        for (LottoDto lottoDto : lottosDto.lottos()) {
-            int matchCount = countMatches(lottoDto.numbers(), winAndBonusDto.winNumbers());
-            boolean bonus = lottoDto.numbers().contains(winAndBonusDto.bonusNumber());
+        lottosDto.lottos().forEach(lotto -> {
+            int matchCount = countMatches(lotto.numbers(), winAndBonusDto.winNumbers());
+            boolean bonus = lotto.numbers().contains(winAndBonusDto.bonusNumber());
             Rank rank = Rank.fromMatches(matchCount, bonus);
-            rankCounts.put(rank, rankCounts.get(rank) + 1);
-        }
+            rankCounts.merge(rank, 1, Integer::sum);
+        });
         return new Result(rankCounts);
     }
 
     private static int countMatches(List<Integer> numbers, Set<Integer> winSet) {
-        int count = 0;
-        for (Integer n : numbers) {
-            if (winSet.contains(n)) {
-                count++;
-            }
-        }
-        return count;
+        return (int) numbers.stream()
+                .filter(winSet::contains)
+                .count();
     }
 
     private int getProfit() {
-        int profit = 0;
-        for (Rank rank : this.rankCounts.keySet()) {
-            int count = this.rankCounts.get(rank);
-            profit += count * rank.getPrizeMoney();
-        }
-        return profit;
+        return this.rankCounts.entrySet().stream()
+                .mapToInt(e -> e.getValue() * e.getKey().getPrizeMoney())
+                .sum();
     }
 
     public ResultDto toDto() {
