@@ -2,6 +2,7 @@ package lotto.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 import lotto.dto.LottoDto;
 import lotto.dto.LottosDto;
 import lotto.service.mapper.LottoMapper;
@@ -20,10 +21,9 @@ public class Lottos {
     public static Lottos from(int payment, LottoFactory factory) {
         validate(payment);
         int count = payment / PRICE;
-        List<Lotto> newLottos = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            newLottos.add(factory.generate());
-        }
+        List<Lotto> newLottos = IntStream.range(0, count)
+                .mapToObj(i -> factory.generate())
+                .toList();
         return new Lottos(count, newLottos);
     }
 
