@@ -6,9 +6,13 @@ import lotto.dto.LottosDto;
 import lotto.dto.ResultDto;
 
 public class OutputView {
+    private static final String LOTTOS_SUFFIX = "개를 구매했습니다.";
+    private static final String PROFIT_RATE_PREFIX = "총 수익률은 ";
+    private static final String PROFIT_RATE_SUFFIX = "%입니다.";
+
     public void printLottos(LottosDto lottosDto) {
         System.out.println();
-        System.out.println(lottosDto.count() + OutputMessage.LOTTOS.getMessage());
+        System.out.println(lottosDto.count() + LOTTOS_SUFFIX);
         for (LottoDto lottoDto : lottosDto.lottos()) {
             System.out.println(lottoDto.numbers());
         }
@@ -26,6 +30,6 @@ public class OutputView {
     }
 
     public void printProfitRate(double profitRate) {
-        System.out.println(OutputMessage.PROFIT_RATE_PREFIX.getMessage() + String.format("%.1f", profitRate) + OutputMessage.PROFIT_RATE_SUFFIX.getMessage());
+        System.out.println(PROFIT_RATE_PREFIX + String.format("%.1f", profitRate) + PROFIT_RATE_SUFFIX);
     }
 }
