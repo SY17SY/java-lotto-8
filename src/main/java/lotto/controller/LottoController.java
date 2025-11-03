@@ -27,34 +27,39 @@ public class LottoController {
     }
 
     public void run() {
-        LottosDto lottosDto;
-        while (true) {
-            try {
-                int payment = askUntilValid(promptView::printPromptPayment, Parser::parsePayment);
-                lottosDto = lottoService.generate(payment, new LottoAutoFactory());
-                break;
-            } catch (IllegalArgumentException e) {
-                errorView.printError(e);
-            }
-        }
+        LottosDto lottosDto = generateLottos();
         outputView.printLottos(lottosDto);
 
-        ResultDto resultDto;
-        while (true) {
-            try {
-                List<Integer> winNumbers = askUntilValid(promptView::printPromptWinNumber, Parser::parseWinNumber);
-                int bonusNumber = askUntilValid(promptView::printPromptBonusNumber, Parser::parseBonusNumber);
-                resultDto = lottoService.calculate(lottosDto, winNumbers, bonusNumber);
-                break;
-            } catch (IllegalArgumentException e) {
-                errorView.printError(e);
-            }
-        }
+        ResultDto resultDto = calculateLottos(lottosDto);
+
         promptView.printPromptResult();
         outputView.printResult(resultDto);
 
         double profitRate = lottoService.getProfitRate(lottosDto, resultDto);
         outputView.printProfitRate(profitRate);
+    }
+
+    private LottosDto generateLottos() {
+        while (true) {
+            try {
+                int payment = askUntilValid(promptView::printPromptPayment, Parser::parsePayment);
+                return lottoService.generate(payment, new LottoAutoFactory());
+            } catch (IllegalArgumentException e) {
+                errorView.printError(e);
+            }
+        }
+    }
+
+    private ResultDto calculateLottos(LottosDto lottosDto) {
+        while (true) {
+            try {
+                List<Integer> winNumbers = askUntilValid(promptView::printPromptWinNumber, Parser::parseWinNumber);
+                int bonusNumber = askUntilValid(promptView::printPromptBonusNumber, Parser::parseBonusNumber);
+                return lottoService.calculate(lottosDto, winNumbers, bonusNumber);
+            } catch (IllegalArgumentException e) {
+                errorView.printError(e);
+            }
+        }
     }
 
     private <T> T askUntilValid(Runnable prompt, Function<String, T> parse) {
