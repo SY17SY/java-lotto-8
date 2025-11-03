@@ -21,7 +21,8 @@ public class WinAndBonus {
     public static WinAndBonus of(List<Integer> winNumbers, int bonusNumber) {
         validateWinNumbers(winNumbers);
         validateWinAndBonusNumber(winNumbers, bonusNumber);
-        return new WinAndBonus(new HashSet<>(winNumbers), bonusNumber);
+        List<Integer> sortedWinNumbers = winNumbers.stream().sorted().toList();
+        return new WinAndBonus(new HashSet<>(sortedWinNumbers), bonusNumber);
     }
 
     private static void validateWinNumbers(List<Integer> winNumbers) {
